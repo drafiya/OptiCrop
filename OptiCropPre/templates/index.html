@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OptiCrop - Crop Recommendation System</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            background:
+            linear-gradient(
+                to bottom,
+                #f3f0e7 0%,
+                #f3f0e7 40%,
+                #e4c98d 40%,
+                #e4c98d 50%,
+                #d2c0ae 50%,
+                #d2c0ae 75%,
+                #bda896 75%,
+                #bda896 100%
+            );
+        }
+
+        .container{
+            width:700px;
+            background:#f8f6f1;
+            border-radius:25px;
+            padding:40px;
+            box-shadow:0 20px 40px rgba(0,0,0,0.15);
+            border:1px solid #e7e1d5;
+        }
+
+        .top-bar{
+            height:25px;
+            margin:-40px -40px 35px;
+            border-radius:25px 25px 0 0;
+            background:
+            linear-gradient(
+                to right,
+                #4d7651 25%,
+                #d9a642 25%,
+                #d9a642 50%,
+                #8b5e3b 50%,
+                #8b5e3b 75%,
+                #4a2d20 75%
+            );
+        }
+
+        h1{
+            text-align:center;
+            color:#294431;
+            margin-bottom:10px;
+            font-size:38px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#666;
+            margin-bottom:35px;
+        }
+
+        .row{
+            display:flex;
+            gap:20px;
+            margin-bottom:20px;
+        }
+
+        .input-box{
+            flex:1;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            color:#666;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:1px solid #d7cfc1;
+            border-radius:12px;
+            background:#faf7f2;
+            font-size:16px;
+        }
+
+        input:focus{
+            outline:none;
+            border:2px solid #2f6b3f;
+        }
+
+        button{
+            width:100%;
+            padding:16px;
+            margin-top:20px;
+            border:none;
+            border-radius:14px;
+            background:#2f6b3f;
+            color:white;
+            font-size:20px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#245530;
+        }
+
+        .result{
+            margin-top:25px;
+            padding:20px;
+            background:#eef5eb;
+            border:1px solid #d3e2cd;
+            border-radius:15px;
+            text-align:center;
+        }
+
+        .result-title{
+            color:#666;
+            font-size:13px;
+            margin-bottom:8px;
+        }
+
+        .crop{
+            color:#2f6b3f;
+            font-size:32px;
+            font-weight:bold;
+        }
+
+        @media(max-width:768px){
+            .container{
+                width:95%;
+            }
+
+            .row{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar"></div>
+
+    <h1>🌾 OptiCrop</h1>
+
+    <p class="subtitle">
+        Enter soil and weather details to get the best crop recommendation
+    </p>
+
+    <form action="/predict" method="POST">
+
+        <div class="row">
+            <div class="input-box">
+                <label>NITROGEN</label>
+                <input type="number"
+                       name="N"
+                       value="{{ request.form.get('N', '') }}"
+                       required>
+            </div>
+
+            <div class="input-box">
+                <label>PHOSPHORUS</label>
+                <input type="number"
+                       name="P"
+                       value="{{ request.form.get('P', '') }}"
+                       required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-box">
+                <label>POTASSIUM</label>
+                <input type="number"
+                       name="K"
+                       value="{{ request.form.get('K', '') }}"
+                       required>
+            </div>
+
+            <div class="input-box">
+                <label>TEMPERATURE (°C)</label>
+                <input type="number"
+                       step="any"
+                       name="temperature"
+                       value="{{ request.form.get('temperature', '') }}"
+                       required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-box">
+                <label>HUMIDITY (%)</label>
+                <input type="number"
+                       step="any"
+                       name="humidity"
+                       value="{{ request.form.get('humidity', '') }}"
+                       required>
+            </div>
+
+            <div class="input-box">
+                <label>pH VALUE</label>
+                <input type="number"
+                       step="any"
+                       name="ph"
+                       value="{{ request.form.get('ph', '') }}"
+                       required>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label>RAINFALL (mm)</label>
+            <input type="number"
+                   step="any"
+                   name="rainfall"
+                   value="{{ request.form.get('rainfall', '') }}"
+                   required>
+        </div>
+
+        <button type="submit">
+            🌱 Predict Crop
+        </button>
+
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <div class="result-title">
+            RECOMMENDED CROP
+        </div>
+
+        <div class="crop">
+            {{ prediction }}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
